@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, createContext, useContext } from "react";
 
-type Language = "en" | "id"; // You can add more languages as needed
+type Language = "en" | "id";
 
 type LanguageContextProviderProps = {
   children: React.ReactNode;

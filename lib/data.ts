@@ -49,7 +49,7 @@ export const experiencesData = [
     date: "October 2022 - December 2022",
   },
   {
-    title: "Movile Developer",
+    title: "Mobile Developer",
     location: "Online",
     description:
       "I learned how to code and how to build mobile apps using Kotlin.",

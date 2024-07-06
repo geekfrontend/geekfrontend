@@ -7,6 +7,7 @@ import ThemeSwitch from "@/components/theme-switch";
 import LanguageSwitch from "@/components/language-switch";
 import ThemeContextProvider from "@/context/theme-context";
 import LanguageContextProvider from "@/context/language-context";
+import ScrollToTop from "@/components/scroll-to-top";
 import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -37,9 +38,10 @@ export default function RootLayout({
               <Footer />
 
               <Toaster position="top-right" />
-              <div className="fixed bottom-5 right-5">
+              <div className="fixed flex flex-col space-y-3 bottom-5 right-5">
                 <ThemeSwitch />
                 <LanguageSwitch />
+                <ScrollToTop />
               </div>
             </ActiveSectionContextProvider>
           </ThemeContextProvider>
