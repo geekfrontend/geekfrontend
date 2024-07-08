@@ -1,13 +1,17 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 import Sidebar from "../admin/Sidebar";
 
-const DefaultLayout = ({ children }) => {
+interface DefaultLayoutProps {
+  children: ReactNode;
+}
+
+const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   return (
-    <div>
+    <>
       <Sidebar />
-      <div>{children}</div>
-    </div>
+      <main>{children}</main>
+    </>
   );
 };
 
