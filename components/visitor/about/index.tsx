@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import SectionHeading from "./section-heading";
 import { motion } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
 
@@ -17,7 +16,9 @@ export default function About() {
       transition={{ delay: 0.175 }}
       id="about"
     >
-      <SectionHeading>About me</SectionHeading>
+      <h2 className="mb-8 text-3xl font-medium text-center capitalize">
+        About Me
+      </h2>
       <p className="mb-3">
         As a frontend developer, I have acquired one year of experience in
         website development. My skill set encompasses a deep understanding of

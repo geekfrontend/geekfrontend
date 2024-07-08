@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useLanguage } from "../context/language-context";
+import { useLanguage } from "../../../context/language-context";
 
 export default function LanguageSwitch() {
   const { language, toggleLanguage } = useLanguage();

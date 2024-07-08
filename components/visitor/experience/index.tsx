@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import SectionHeading from "./section-heading";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -17,7 +16,9 @@ export default function Experience() {
 
   return (
     <section id="experience" ref={ref} className="scroll-mt-28 mb-28 sm:mb-40">
-      <SectionHeading>My experience</SectionHeading>
+      <h2 className="mb-8 text-3xl font-medium text-center capitalize">
+        My Experiences
+      </h2>
       <VerticalTimeline lineColor="">
         {experiencesData.map((item, index) => (
           <React.Fragment key={index}>

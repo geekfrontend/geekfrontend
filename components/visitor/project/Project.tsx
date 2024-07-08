@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import ImageProject from "../public/project.jpg";
+import ImageProject from "../../../public/project.jpg";
 
 interface ProjectProps {
   title: string;

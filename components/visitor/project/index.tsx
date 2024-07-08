@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import SectionHeading from "./section-heading";
-import Project from "./project";
+import Project from "./Project";
 import { useSectionInView } from "@/lib/hooks";
 import axios from "axios";
 import { config } from "@/config";
+import Link from "next/link";
 
 type ProjectType = {
   title: string;
@@ -31,7 +31,14 @@ export default function Projects() {
 
   return (
     <section ref={ref} id="projects" className="scroll-mt-28 mb-28">
-      <SectionHeading>My projects</SectionHeading>
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-medium text-center capitalize ">
+          My Projects
+        </h2>
+        <Link href="/projects" className="text-sm underline">
+          See All
+        </Link>
+      </div>
       <div>
         {projects.map((project, index) => (
           <React.Fragment key={index}>
