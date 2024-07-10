@@ -1,5 +1,6 @@
 import React from "react";
 import DefaultLayout from "@/components/layout/DefaultLayout";
+import { CiImageOn } from "react-icons/ci";
 
 const Dashboard = () => {
   return (
