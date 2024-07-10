@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -9,7 +10,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   const [isClient, setIsClient] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  // Only initialize the router on the client side
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -20,7 +20,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [isClient, loading, isAuthenticated]);
 
-  // Use router only after ensuring the component is mounted
   const router = useRouter();
 
   useEffect(() => {
