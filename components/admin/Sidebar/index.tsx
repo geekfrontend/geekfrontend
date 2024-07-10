@@ -1,78 +1,243 @@
+import { FC, useRef, useState, useEffect } from "react";
+import SimpleBar from "simplebar-react";
+import "simplebar-react/dist/simplebar.min.css";
+import { Route, routes } from "@/utils/route";
 import Link from "next/link";
+import Me from "@/public/me.png";
+import Image from "next/image";
 
-const Sidebar = () => {
+interface SidebarProps {
+  setExpand: (value: boolean) => void;
+}
+
+const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
+  const [openedMenu, setOpenedMenu] = useState<
+    Record<string, { open: boolean; height: string }>
+  >({});
+  const [activeName, setActiveName] = useState<string>("");
+  const [isExpand, setIsExpand] = useState<boolean>(true);
+  const [isExpandOnHover, setIsExpandOnHover] = useState<boolean>(false);
+  const activeLink =
+    typeof window !== "undefined" ? window.location.pathname : "";
+
+  const listRef = useRef<Record<string, HTMLUListElement | null>>({});
+
+  useEffect(() => {
+    const foundRoute = routes.find(
+      (item) => activeName === "" && activeLink.includes(item.link as string)
+    );
+    if (foundRoute) {
+      setActiveName(foundRoute.name);
+    }
+  }, [activeLink, activeName]);
+
+  const handleHoverExpand = (value: boolean) => {
+    if (!isExpand) {
+      setIsExpandOnHover(value);
+    }
+  };
+
+  const handleNavigate = (path: string) => {
+    setActiveName(path);
+  };
+
+  const handleToggle = (name: string) => {
+    const rootEl = name.split(".")[0];
+    const isOpen = openedMenu[name]?.open ?? false;
+
+    setOpenedMenu((prevState) => ({
+      ...prevState,
+      [name]: {
+        open: !isOpen,
+        height: isOpen ? "0px" : `${listRef.current[name]?.scrollHeight}px`,
+      },
+      [rootEl]: {
+        open: rootEl === name ? !isOpen : true,
+        height: `${
+          (listRef.current[rootEl]?.scrollHeight ?? 0) +
+          (isOpen
+            ? -listRef.current[name]?.scrollHeight
+            : listRef.current[name]?.scrollHeight)
+        }px`,
+      },
+    }));
+  };
+
+  const generateMenu = (item: Route, index: number, recursive: number = 0) => {
+    const classesActive = activeName === item.name ? "active" : "";
+    const isChild = "child" in item && item.child;
+
+    const handleClick = () => {
+      if (isChild) {
+        handleToggle(item.name);
+      } else {
+        handleNavigate(item.name);
+      }
+    };
+
+    return (
+      <li key={index}>
+        <a
+          href={item.link as string}
+          tabIndex={0}
+          id={item.id}
+          onClick={handleClick}
+          onKeyDown={(event) => {
+            if (event.code === "Space") {
+              handleClick();
+            }
+          }}
+          className={[
+            "group m-0 flex cursor-pointer rounded-lg items-center justify-between h-12 py-0 pr-3 mb-1 focus:outline-none",
+            recursive === 0 ? "pl-4" : recursive === 1 ? "pl-11" : "pl-16",
+            classesActive,
+            activeName === item.name || activeName.split(".")[0] === item.name
+              ? `text-blue-600 font-semibold ${
+                  item.parent ? "bg-blue-200/20" : "bg-transparent"
+                }`
+              : "text-slate-500",
+            "hover:bg-slate-300/20",
+          ].join(" ")}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className={`truncate ${
+                isExpand || isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+              }`}
+            >
+              {item.title}
+            </div>
+          </div>
+          {isChild && (
+            <div
+              className={`${
+                isExpand || isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+              }`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          )}
+        </a>
+        {isChild && (
+          <ul
+            ref={(el) => (listRef.current[item.name] = el)}
+            className={[
+              "transition-max-height overflow-hidden duration-300 ease-in-out",
+              isExpand || isExpandOnHover ? "" : "h-0",
+            ].join(" ")}
+            style={{ maxHeight: `${openedMenu[item.name]?.height ?? "0px"}` }}
+            key={item.name}
+          >
+            {item.child?.map((childItem, idx) =>
+              generateMenu(childItem, idx, recursive + 1)
+            )}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
   return (
-    <>
+    <nav
+      role="navigation"
+      className={[
+        "bg-slate-50 border-r border-slate-100 shadow-sm absolute inset-y-0 left-0",
+        "transition-all h-screen duration-300 ease-in-out md:fixed",
+        `${
+          isExpand
+            ? "bg-slate-50 w-72"
+            : isExpandOnHover
+            ? "bg-slate-50/70 w-72 backdrop-blur-md"
+            : "bg-slate-50 w-20"
+        }`,
+      ].join(" ")}
+    >
       <button
-        data-drawer-target="default-sidebar"
-        data-drawer-toggle="default-sidebar"
-        aria-controls="default-sidebar"
-        type="button"
-        className="inline-flex items-center p-2 mt-2 text-sm text-gray-500 rounded-lg ms-3 sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="absolute z-50 top-16 -right-3 bg-white hover:bg-slate-100 text-slate-500 p-0.5 rounded-full border border-slate-200"
+        onClick={() => {
+          setIsExpand((prevState) => {
+            setExpand(!prevState);
+            return !prevState;
+          });
+        }}
       >
-        <span className="sr-only">Open sidebar</span>
         <svg
-          className="w-6 h-6"
-          aria-hidden="true"
-          fill="currentColor"
-          viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
+          className={`${
+            isExpand ? "rotate-0" : "rotate-180"
+          } transform transition duration-500 h-4 w-4`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
           <path
-            clip-rule="evenodd"
-            fill-rule="evenodd"
-            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-          ></path>
+            fillRule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clipRule="evenodd"
+          />
         </svg>
       </button>
-
-      <aside
-        id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-        aria-label="Sidebar"
+      <div
+        onMouseEnter={() => handleHoverExpand(true)}
+        onMouseLeave={() => handleHoverExpand(false)}
+        className="relative h-screen overflow-hidden"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <ul className="space-y-2 font-medium">
-            <li>
-              <Link
-                href="/dashboard"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+        <SimpleBar style={{ height: "100%" }} autoHide timeout={100}>
+          <div className="flex flex-col justify-between min-h-screen mb-0 list-none text-slate-500">
+            <div
+              className={`my-8 h-1/5 flex flex-col items-center overflow-x-hidden duration-300 ${
+                isExpand || isExpandOnHover ? "px-3" : "px-5"
+              }`}
+            >
+              <a
+                href="/"
+                className={`flex items-center rounded-lg w-full h-20 duration-300 ${
+                  isExpand || isExpandOnHover
+                    ? "bg-slate-300/25 px-4 gap-3"
+                    : ""
+                }`}
               >
-                <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 21"
+                <div className="w-10 h-10 overflow-hidden duration-300 rounded-full shrink-0">
+                  <Image src={Me} alt="Me" />
+                </div>
+                <div
+                  className={`flex flex-col ${
+                    isExpand || isExpandOnHover ? "" : "w-0 h-0 opacity-0"
+                  }`}
                 >
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
-                <span className="ms-3">Dashboard</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/projects"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 21"
-                >
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
-                <span className="ms-3">Project</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </aside>
-    </>
+                  <div className="text-base font-semibold truncate duration-300 text-slate-700">
+                    Harke Wauran
+                  </div>
+                  <div className="text-sm truncate text-slate-500">
+                    Frontend Developer
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div className="p-0 mt-3 mb-10 overflow-y-auto leading-10 ">
+              <ul className="px-3 text-sm font-normal list-none">
+                {routes.map((item, index) => generateMenu(item, index))}
+              </ul>
+            </div>
+            <div className="px-4 py-2 my-8 h-1/5">
+              <button className="block w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">
+                Keluar
+              </button>
+            </div>
+          </div>
+        </SimpleBar>
+      </div>
+    </nav>
   );
 };
 

@@ -1,15 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import ImageProject from "../../../public/project.jpg";
+import ImageProject from "@/public/project.jpg";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 interface ProjectProps {
   title: string;
   description: string;
   tags: string[];
 }
+
 export default function Project({ title, description, tags }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({

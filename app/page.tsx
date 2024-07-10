@@ -9,7 +9,7 @@ import Header from "@/components/visitor/header";
 import Footer from "@/components/visitor/footer";
 import { Toaster } from "react-hot-toast";
 import ThemeSwitch from "@/components/common/theme/theme-switch";
-import LanguageSwitch from "@/components/common/scroll/scroll-to-top";
+import LanguageSwitch from "@/components/common/language/language-switch";
 import ScrollToTop from "@/components/common/scroll/scroll-to-top";
 import { Inter } from "next/font/google";
 import About from "@/components/visitor/about";
