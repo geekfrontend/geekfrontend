@@ -36,7 +36,7 @@ export default function Skills() {
       <h2 className="mb-8 text-3xl font-medium text-center capitalize">
         My Skills
       </h2>
-      {(isLoading || isError) && skills?.length === 0 ? (
+      {isLoading || isError || skills?.length === 0 ? (
         <>
           <div className="animate-pulse">
             <ul className="flex flex-wrap justify-center gap-4 text-lg">

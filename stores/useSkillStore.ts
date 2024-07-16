@@ -26,44 +26,7 @@ interface SkillState {
 }
 
 export const useSkillStore = create<SkillState>((set) => ({
-  skills: [
-    {
-      id: 1,
-      name: "HTML",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-    {
-      id: 2,
-      name: "CSS",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-    {
-      id: 3,
-      name: "JavaScript",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-    {
-      id: 4,
-      name: "TypeScript",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-    {
-      id: 5,
-      name: "React",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-    {
-      id: 6,
-      name: "Next.js",
-      createdAt: "2022-01-01T00:00:00.000Z",
-      updatedAt: "2022-01-01T00:00:00.000Z",
-    },
-  ],
+  skills: null,
   skill: null,
   isError: false,
   isSuccess: false,
@@ -73,12 +36,16 @@ export const useSkillStore = create<SkillState>((set) => ({
     set({ isLoading: true, isError: false, isSuccess: false, message: null });
     try {
       const response = await axios.get(`${API_URL}`);
+      console.log(response.data);
+      const { statusCode, status, message, data } = response.data;
+      const { skills, page, limit, totalSkills, totalPages } = data;
+      console.log(skills);
       set({
-        skills: response.data,
+        skills: skills,
         isLoading: false,
         isError: false,
         isSuccess: true,
-        message: "Skills fetched successfully",
+        message: "Skills fetched successfully" ?? message,
       });
     } catch (error: any) {
       set({
