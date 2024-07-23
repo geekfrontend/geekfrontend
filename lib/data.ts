@@ -19,7 +19,7 @@ export const links = [
     hash: "#skills",
   },
   {
-    name: "Experience",
+    name: "Experiences",
     hash: "#experience",
   },
   {
@@ -51,7 +51,7 @@ export const experiencesData = [
     description:
       "I learned how to code and how to build mobile apps using Kotlin.",
     icon: React.createElement(LuGraduationCap),
-    date: "February 2023 August 2023",
+    date: "February 2023 - August 2023",
   },
 ] as const;
 
