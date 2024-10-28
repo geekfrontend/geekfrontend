@@ -5,6 +5,7 @@ import en from "../locales/en/common.json";
 import id from "../locales/id/common.json";
 
 type Language = "en" | "id";
+type TranslationKeys = keyof typeof en; // Mengambil key dari file en.json sebagai tipe
 
 type LanguageContextProviderProps = {
   children: React.ReactNode;
@@ -13,12 +14,12 @@ type LanguageContextProviderProps = {
 type LanguageContextType = {
   language: Language;
   toggleLanguage: () => void;
-  t: (key: string) => string;
+  t: (key: TranslationKeys) => string;
 };
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
-const translations = {
+const translations: Record<Language, Record<TranslationKeys, string>> = {
   en,
   id,
 };
@@ -43,7 +44,7 @@ export default function LanguageContextProvider({
     }
   }, []);
 
-  const t = (key: string) => {
+  const t = (key: TranslationKeys) => {
     return translations[language][key] || key;
   };
 
