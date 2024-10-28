@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, createContext, useContext } from "react";
+import en from "../locales/en/common.json";
+import id from "../locales/id/common.json";
 
 type Language = "en" | "id";
 
@@ -11,9 +13,15 @@ type LanguageContextProviderProps = {
 type LanguageContextType = {
   language: Language;
   toggleLanguage: () => void;
+  t: (key: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
+
+const translations = {
+  en,
+  id,
+};
 
 export default function LanguageContextProvider({
   children,
@@ -35,13 +43,12 @@ export default function LanguageContextProvider({
     }
   }, []);
 
+  const t = (key: string) => {
+    return translations[language][key] || key;
+  };
+
   return (
-    <LanguageContext.Provider
-      value={{
-        language,
-        toggleLanguage,
-      }}
-    >
+    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

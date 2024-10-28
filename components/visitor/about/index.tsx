@@ -3,9 +3,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
+import { useLanguage } from "@/context/language-context";
 
 export default function About() {
   const { ref } = useSectionInView("About");
+  const { t } = useLanguage();
 
   return (
     <motion.section
