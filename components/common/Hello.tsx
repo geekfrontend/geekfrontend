@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const greetings = [
+  { text: "Halo", language: "Indonesia" },
   { text: "नमस्ते", language: "Hindi" },
   { text: "Hello!", language: "English" },
   { text: "Hola", language: "Spanish" },
@@ -46,7 +47,7 @@ const Hello: React.FC = () => {
     <AnimatePresence>
       {!isComplete && (
         <motion.div
-          className="fixed inset-0 z-20 bg-[#f0f0f0] text-[#000]"
+          className="fixed inset-0 z-[99999] bg-[#f0f0f0] text-[#000]"
           initial={{
             y: 0,
             borderBottomLeftRadius: 0,
