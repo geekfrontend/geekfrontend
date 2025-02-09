@@ -1,9 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Yohanes Harke Wauran | Personal Portfolio",
-  description:
-    "Explore the portfolio of Yohanes Harke Wauran, showcasing web development skills, creative projects, and professional experience in building innovative digital solutions.",
+  title: "Yohanes Harke Wauran",
+  description: "Yohanes Harke Wauran",
 };
 
 export default function RootLayout({
@@ -13,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
