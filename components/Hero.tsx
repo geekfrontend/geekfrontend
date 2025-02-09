@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
         style={{ transform: `scale(${scale})` }}
       >
         <h1 className="mb-4 text-4xl sm:text-5xl md:text-6xl">
-          Hey, I&apos;m{" "}
+          Hi there, I&apos;m{" "}
           <span className="underline">
             <UnderlineToBackground
               label="Harke"

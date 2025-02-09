@@ -1,2 +1,7 @@
-<h1 align="center">Hi 👋, I'm Harke</h1>
-<h3 align="center">Frontend Developer</h3>
+### Hi there 👋, my name is Harke
+
+Frontend Developer specializing in web applications within the React ecosystem.
+
+- 🔭 I’m currently working on Kerjoo
+- 🌱 I’m currently learning English
+- 😄 Pronouns: he/him
